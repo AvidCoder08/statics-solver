@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CalculateIcon from '@mui/icons-material/Calculate'
 import { StepDisplay, ResultRow } from '../components/StepDisplay.jsx'
+import { ForceSystemVisualizer, CoupleVisualizer } from '../components/Visualizations.jsx'
 import { solveForceResultant, solveMoment, solveCouple, solveResultant2D } from '../solvers/unit1.js'
 
 const NUM = (v) => parseFloat(v)
@@ -57,6 +58,11 @@ function ForceResultantTool() {
       <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
         Enter concurrent forces in 2D. Angle is measured from the +x axis (CCW positive).
       </Typography>
+      <ForceSystemVisualizer
+        forces={forces}
+        resultant={result?.result}
+        title="Live Vector Diagram"
+      />
       {forces.map((f, i) => <ForceRow key={i} f={f} i={i} onChange={update} onDelete={del} />)}
       <Button size="small" startIcon={<AddIcon />} onClick={add} sx={{ mb: 2 }}>Add Force</Button>
       {error && <Alert severity="error" sx={{ mb: 1.5 }}>{error}</Alert>}
@@ -100,6 +106,11 @@ function MomentTool() {
       <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
         Compute the moment of forces about the origin. rx and ry are the position vector components from the moment point to the force's point of application.
       </Typography>
+      <ForceSystemVisualizer
+        forces={entries}
+        showPositions
+        title="Moment Geometry Preview"
+      />
       {entries.map((e, i) => <ForceRow key={i} f={e} i={i} onChange={update} onDelete={del} showPos />)}
       <Button size="small" startIcon={<AddIcon />} onClick={add} sx={{ mb: 2 }}>Add Force</Button>
       {error && <Alert severity="error" sx={{ mb: 1.5 }}>{error}</Alert>}
@@ -133,6 +144,7 @@ function CoupleTool() {
       <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
         A couple consists of two equal, opposite, parallel forces. Enter one force magnitude and the perpendicular distance between them.
       </Typography>
+      <CoupleVisualizer F={F} d={d} />
       <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap' }}>
         <TextField label="Force F (N)" value={F} onChange={(e) => setF(e.target.value)} sx={{ width: 180 }} />
         <TextField label="Perpendicular distance d (m)" value={d} onChange={(e) => setD(e.target.value)} sx={{ width: 220 }} />
@@ -175,6 +187,12 @@ function Resultant2DTool() {
       <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
         Reduce a 2D force system to a single resultant. Provide forces (with their points of application) and any applied couples.
       </Typography>
+      <ForceSystemVisualizer
+        forces={forces}
+        showPositions
+        resultant={result?.result}
+        title="System Reduction Preview"
+      />
 
       <Typography variant="subtitle2" sx={{ mb: 1 }}>Forces</Typography>
       {forces.map((f, i) => <ForceRow key={i} f={f} i={i} onChange={updF} onDelete={(j) => setForces((fs) => fs.filter((_, k) => k !== j))} showPos />)}

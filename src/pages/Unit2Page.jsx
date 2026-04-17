@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CalculateIcon from '@mui/icons-material/Calculate'
 import { StepDisplay, ResultRow } from '../components/StepDisplay.jsx'
+import { BeamVisualizer, TrussVisualizer } from '../components/Visualizations.jsx'
 import { solveBeamEquilibrium, solveTruss } from '../solvers/unit2.js'
 
 const N = (v) => parseFloat(v)
@@ -45,6 +46,17 @@ function BeamEquilibriumTool() {
       <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
         Simply supported beam — pin at A (x=0), roller at B (x=L). Downward angle = 270°.
       </Typography>
+
+      <BeamVisualizer
+        L={L}
+        pointLoads={pointLoads}
+        udls={udls}
+        moments={moments}
+        reactions={result?.result ?? null}
+        title="Interactive Beam FBD"
+        onPointLoadMove={(i, x) => updPL(i, 'x', x.toFixed(3))}
+        onMomentMove={(i, x) => updMom(i, 'x', x.toFixed(3))}
+      />
 
       <TextField label="Beam length L (m)" value={L} onChange={(e) => setL(e.target.value)} sx={{ mb: 2, width: 200 }} />
 
@@ -149,6 +161,18 @@ function TrussJointsTool() {
         Define your truss geometry, members, supports, and loads. A sample triangular truss is pre-loaded.
         For sign convention: <strong>positive force = Tension, negative = Compression</strong>. Loads: Fy negative = downward.
       </Typography>
+
+      <TrussVisualizer
+        nodes={nodes}
+        members={members}
+        loads={loads}
+        memberResults={result?.result ?? null}
+        title="Interactive Truss Diagram"
+        onLoadMove={(i, fx, fy) => {
+          updLoad(i, 'Fx', fx.toFixed(0))
+          updLoad(i, 'Fy', fy.toFixed(0))
+        }}
+      />
 
       {/* Nodes */}
       <Typography variant="subtitle2" sx={{ mb: 1 }}>Nodes</Typography>

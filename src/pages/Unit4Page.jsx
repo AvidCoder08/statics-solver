@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CalculateIcon from '@mui/icons-material/Calculate'
 import { StepDisplay, ResultRow } from '../components/StepDisplay.jsx'
+import { CompositeShapeVisualizer, FrictionVisualizer } from '../components/Visualizations.jsx'
 import { MOI_SHAPES, solveAreaMOI, solveFrictionHorizontal, solveFrictionInclined } from '../solvers/unit4.js'
 
 const N = (v) => parseFloat(v)
@@ -47,6 +48,12 @@ function AreaMOITool() {
         Compute area second moments of inertia for composite sections using the parallel axis theorem.
         Set the reference axes (default = x=0, y=0).
       </Typography>
+
+      <CompositeShapeVisualizer
+        shapes={shapes}
+        refAxis={{ x: refX, y: refY }}
+        title="MOI Section and Reference Axes"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 2.5 }}>
         <TextField label="Reference x-axis (y = ?)" value={refY} onChange={(e) => setRefY(e.target.value)} sx={{ width: 200 }} helperText="Ix computed about y = this value" />
@@ -164,6 +171,12 @@ function FrictionHorizontalTool() {
         Block on a flat horizontal surface. Enter weight, friction coefficients, and applied horizontal force P.
       </Typography>
 
+      <FrictionVisualizer
+        mode="horizontal"
+        values={{ W, P }}
+        result={result?.result ?? null}
+      />
+
       <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mb: 2 }}>
         <TextField label="Weight W (N)" value={W} onChange={(e) => setW(e.target.value)} sx={{ width: 160 }} />
         <TextField label="μs (static)" value={mu_s} onChange={(e) => setMuS(e.target.value)} sx={{ width: 140 }} />
@@ -207,6 +220,12 @@ function FrictionInclinedTool() {
       <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
         Block on an inclined plane. P is the force along the slope (positive = up the slope, 0 = no external force along slope).
       </Typography>
+
+      <FrictionVisualizer
+        mode="inclined"
+        values={{ W, P, theta }}
+        result={result?.result ?? null}
+      />
 
       <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mb: 2 }}>
         <TextField label="Weight W (N)" value={W} onChange={(e) => setW(e.target.value)} sx={{ width: 160 }} />
