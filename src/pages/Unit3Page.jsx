@@ -9,11 +9,32 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CalculateIcon from '@mui/icons-material/Calculate'
 import { StepDisplay, ResultRow } from '../components/StepDisplay.jsx'
-import { CompositeAreaVisualizer, BeamLoadVisualizer } from '../components/MechanicsVisuals.jsx'
+import { CompositeAreaVisualizer, BeamLoadVisualizer, ShearMomentChart } from '../components/MechanicsVisuals.jsx'
 import { SHAPE_DEFS, solveCentroid } from '../solvers/unit3.js'
-import { solveBeamEquilibrium } from '../solvers/unit2.js'
+import { buildShearBendingDiagram, solveBeamEquilibrium } from '../solvers/unit2.js'
 
 const N = (v) => parseFloat(v)
+
+const supportPreset = (type, L) => {
+  if (type === 'cantilever_left') return [{ id: 'A', x: 0, type: 'fixed' }]
+  if (type === 'cantilever_right') return [{ id: 'B', x: L, type: 'fixed' }]
+  if (type === 'overhanging') return [
+    { id: 'A', x: 0.2 * L, type: 'pin' },
+    { id: 'B', x: 0.75 * L, type: 'rollerY' },
+  ]
+  if (type === 'fixed_fixed') return [
+    { id: 'A', x: 0, type: 'fixed' },
+    { id: 'B', x: L, type: 'fixed' },
+  ]
+  if (type === 'propped_cantilever') return [
+    { id: 'A', x: 0, type: 'fixed' },
+    { id: 'B', x: L, type: 'rollerY' },
+  ]
+  return [
+    { id: 'A', x: 0, type: 'pin' },
+    { id: 'B', x: L, type: 'rollerY' },
+  ]
+}
 
 // ── Centroid Calculator ───────────────────────────────────────────────────────
 function CentroidTool() {
@@ -154,25 +175,72 @@ function CentroidTool() {
 // ── Beam Reactions (re-uses Unit 2 solver, dedicated UI here) ────────────────
 function BeamReactionsTool() {
   const [L, setL] = useState('8')
+  const [beamType, setBeamType] = useState('simply_supported')
+  const [supports, setSupports] = useState(supportPreset('simply_supported', 8))
   const [pointLoads, setPointLoads] = useState([
     { P: '15000', x: '2', angle: '270' },
     { P: '25000', x: '5', angle: '270' },
   ])
   const [udls, setUdls] = useState([{ w: '10000', x1: '4', x2: '8' }])
+  const [uvls, setUvls] = useState([])
+  const [xQuery, setXQuery] = useState('4')
+  const [diagram, setDiagram] = useState(null)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
 
   const updPL = (i, k, v) => setPointLoads((p) => p.map((r, j) => j === i ? { ...r, [k]: v } : r))
   const updUDL = (i, k, v) => setUdls((u) => u.map((r, j) => j === i ? { ...r, [k]: v } : r))
+  const updUVL = (i, k, v) => setUvls((u) => u.map((r, j) => j === i ? { ...r, [k]: v } : r))
+  const updSup = (i, k, v) => setSupports((s) => s.map((r, j) => j === i ? { ...r, [k]: v } : r))
 
   const calc = () => {
     setError(null)
     if (!L || isNaN(N(L))) { setError('Enter beam length.'); return }
     const pl = pointLoads.map((p) => ({ P: N(p.P), x: N(p.x), angle: N(p.angle ?? 270) }))
     const ud = udls.map((u) => ({ w: N(u.w), x1: N(u.x1), x2: N(u.x2) }))
+    const uv = uvls.map((u) => ({ w1: N(u.w1), w2: N(u.w2), x1: N(u.x1), x2: N(u.x2) }))
+    const sups = supports.map((s, i) => ({ id: (s.id || `S${i + 1}`).trim(), x: N(s.x), type: s.type }))
     if (pl.some((p) => isNaN(p.P) || isNaN(p.x))) { setError('Check point load values.'); return }
     if (ud.some((u) => isNaN(u.w) || isNaN(u.x1) || isNaN(u.x2))) { setError('Check UDL values.'); return }
-    setResult(solveBeamEquilibrium({ L: N(L), pointLoads: pl, udls: ud }))
+    if (uv.some((u) => isNaN(u.w1) || isNaN(u.w2) || isNaN(u.x1) || isNaN(u.x2))) { setError('Check UVL values.'); return }
+    if (sups.some((s) => !s.id || isNaN(s.x))) { setError('Check support values.'); return }
+    const res = solveBeamEquilibrium({ L: N(L), pointLoads: pl, udls: ud, uvls: uv, supports: sups })
+    if (res.error) {
+      setError(res.error)
+      setDiagram(null)
+      setResult(res)
+      return
+    }
+    const dia = buildShearBendingDiagram({
+      L: N(L),
+      pointLoads: pl,
+      udls: ud,
+      uvls: uv,
+      moments: [],
+      supports: sups,
+      reactions: res.result,
+      xQuery: N(xQuery) || 0,
+    })
+    setDiagram(dia)
+    setResult(res)
+  }
+
+  const updatePointQuery = () => {
+    if (!result?.result || !diagram) return
+    const pl = pointLoads.map((p) => ({ P: N(p.P), x: N(p.x), angle: N(p.angle ?? 270) }))
+    const ud = udls.map((u) => ({ w: N(u.w), x1: N(u.x1), x2: N(u.x2) }))
+    const uv = uvls.map((u) => ({ w1: N(u.w1), w2: N(u.w2), x1: N(u.x1), x2: N(u.x2) }))
+    const sups = supports.map((s, i) => ({ id: (s.id || `S${i + 1}`).trim(), x: N(s.x), type: s.type }))
+    setDiagram(buildShearBendingDiagram({
+      L: N(L),
+      pointLoads: pl,
+      udls: ud,
+      uvls: uv,
+      moments: [],
+      supports: sups,
+      reactions: result.result,
+      xQuery: N(xQuery) || 0,
+    }))
   }
 
   return (
@@ -185,11 +253,56 @@ function BeamReactionsTool() {
         L={L}
         pointLoads={pointLoads}
         onPointLoadsChange={setPointLoads}
+        supports={supports}
+        onSupportsChange={setSupports}
         udls={udls}
+        uvls={uvls}
         moments={[]}
       />
 
+      <Box sx={{ display: 'flex', gap: 1, mb: 1.5, flexWrap: 'wrap' }}>
+        <FormControl size="small" sx={{ width: 260 }}>
+          <InputLabel>Beam Type Preset</InputLabel>
+          <Select
+            value={beamType}
+            label="Beam Type Preset"
+            onChange={(e) => {
+              const type = e.target.value
+              const len = N(L) || 8
+              setBeamType(type)
+              setSupports(supportPreset(type, len))
+            }}
+          >
+            <MenuItem value="simply_supported">Simply Supported</MenuItem>
+            <MenuItem value="cantilever_left">Cantilever (fixed at left)</MenuItem>
+            <MenuItem value="cantilever_right">Cantilever (fixed at right)</MenuItem>
+            <MenuItem value="overhanging">Overhanging</MenuItem>
+            <MenuItem value="fixed_fixed">Fixed-Fixed</MenuItem>
+            <MenuItem value="propped_cantilever">Propped Cantilever</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
       <TextField label="Beam length L (m)" value={L} onChange={(e) => setL(e.target.value)} sx={{ mb: 2, width: 200 }} />
+
+      <Typography variant="subtitle2" sx={{ mb: 1 }}>Supports (drag markers in diagram to move)</Typography>
+      {supports.map((s, i) => (
+        <Box key={i} sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center', flexWrap: 'wrap' }}>
+          <TextField label="ID" value={s.id} size="small" onChange={(e) => updSup(i, 'id', e.target.value)} sx={{ width: 90 }} />
+          <FormControl size="small" sx={{ width: 160 }}>
+            <InputLabel>Type</InputLabel>
+            <Select value={s.type} label="Type" onChange={(e) => updSup(i, 'type', e.target.value)}>
+              <MenuItem value="pin">Pin</MenuItem>
+              <MenuItem value="rollerY">Roller Y</MenuItem>
+              <MenuItem value="rollerX">Roller X</MenuItem>
+              <MenuItem value="fixed">Fixed</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField label="x (m)" value={s.x} size="small" onChange={(e) => updSup(i, 'x', e.target.value)} sx={{ width: 130 }} />
+          <IconButton size="small" onClick={() => setSupports((sp) => sp.filter((_, j) => j !== i))} disabled={supports.length <= 1} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+        </Box>
+      ))}
+      <Button size="small" startIcon={<AddIcon />} onClick={() => setSupports((sp) => [...sp, { id: `S${sp.length + 1}`, x: '', type: 'rollerY' }])} sx={{ mb: 2 }}>Add Support</Button>
 
       <Typography variant="subtitle2" sx={{ mb: 1 }}>Point Loads (downward angle = 270°)</Typography>
       {pointLoads.map((p, i) => (
@@ -212,13 +325,48 @@ function BeamReactionsTool() {
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setUdls((u) => [...u, { w: '', x1: '', x2: '' }])} sx={{ mb: 2 }}>Add UDL</Button>
 
+      <Typography variant="subtitle2" sx={{ mb: 1 }}>UVL (N/m, downward linearly varying)</Typography>
+      {uvls.map((u, i) => (
+        <Box key={i} sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center', flexWrap: 'wrap' }}>
+          <TextField label="w1 (N/m)" value={u.w1} size="small" onChange={(e) => updUVL(i, 'w1', e.target.value)} sx={{ width: 120 }} />
+          <TextField label="w2 (N/m)" value={u.w2} size="small" onChange={(e) => updUVL(i, 'w2', e.target.value)} sx={{ width: 120 }} />
+          <TextField label="x1 (m)" value={u.x1} size="small" onChange={(e) => updUVL(i, 'x1', e.target.value)} sx={{ width: 110 }} />
+          <TextField label="x2 (m)" value={u.x2} size="small" onChange={(e) => updUVL(i, 'x2', e.target.value)} sx={{ width: 110 }} />
+          <IconButton size="small" onClick={() => setUvls((ul) => ul.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+        </Box>
+      ))}
+      <Button size="small" startIcon={<AddIcon />} onClick={() => setUvls((u) => [...u, { w1: '', w2: '', x1: '', x2: '' }])} sx={{ mb: 2 }}>Add UVL</Button>
+
       {error && <Alert severity="error" sx={{ mb: 1.5 }}>{error}</Alert>}
       <Button variant="contained" startIcon={<CalculateIcon />} onClick={calc}>Calculate Reactions</Button>
 
       {result && (
         <Box sx={{ mt: 3 }}>
-          <ResultRow label="RAy (at A)" value={result.result.RAy} unit="N" />
-          <ResultRow label="RB (at B)" value={result.result.RB} unit="N" />
+          {Object.entries(result.result)
+            .filter(([k]) => /^(R|M)/.test(k) && !['RAx', 'RAy', 'RB'].includes(k))
+            .map(([k, v]) => <ResultRow key={k} label={k} value={v} unit={k.startsWith('M') ? 'N·m' : 'N'} />)}
+
+          {(!result.result || Object.entries(result.result).filter(([k]) => /^(R|M)/.test(k) && !['RAx', 'RAy', 'RB'].includes(k)).length === 0) && (
+            <>
+              <ResultRow label="RAy (at A)" value={result.result.RAy} unit="N" />
+              <ResultRow label="RB (at B)" value={result.result.RB} unit="N" />
+            </>
+          )}
+
+          {diagram && (
+            <>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>Shear/Bending at a Particular Point</Typography>
+              <Box sx={{ display: 'flex', gap: 1, mb: 1.25, flexWrap: 'wrap', alignItems: 'center' }}>
+                <TextField label="x (m)" size="small" value={xQuery} onChange={(e) => setXQuery(e.target.value)} sx={{ width: 120 }} />
+                <Button size="small" variant="outlined" onClick={updatePointQuery}>Evaluate at x</Button>
+              </Box>
+              <ResultRow label="V(x)" value={diagram.atQuery.V.toFixed(4)} unit="N" />
+              <ResultRow label="M(x)" value={diagram.atQuery.M.toFixed(4)} unit="N·m" />
+              <ShearMomentChart L={N(L)} diagram={diagram.data} query={diagram.atQuery} />
+            </>
+          )}
+
           <Divider sx={{ my: 2 }} />
           <StepDisplay steps={result.steps} />
         </Box>

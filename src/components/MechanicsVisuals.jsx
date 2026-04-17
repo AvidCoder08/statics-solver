@@ -218,7 +218,17 @@ export function CoupleVisualizer({ F, d }) {
   )
 }
 
-export function BeamLoadVisualizer({ L, pointLoads, onPointLoadsChange, udls = [], moments = [], onMomentsChange }) {
+export function BeamLoadVisualizer({
+  L,
+  pointLoads,
+  onPointLoadsChange,
+  supports = [],
+  onSupportsChange,
+  udls = [],
+  uvls = [],
+  moments = [],
+  onMomentsChange,
+}) {
   const beamL = Math.max(0.1, N(L, 1))
   const width = 620
   const height = 250
@@ -243,6 +253,12 @@ export function BeamLoadVisualizer({ L, pointLoads, onPointLoadsChange, udls = [
     onMomentsChange(next)
   }
 
+  const updateSupport = (index, patch) => {
+    if (!onSupportsChange) return
+    const next = supports.map((s, i) => (i === index ? { ...s, ...patch } : s))
+    onSupportsChange(next)
+  }
+
   const onMove = (evt) => {
     if (!drag) return
     const p = toSvgCoords(evt)
@@ -261,10 +277,14 @@ export function BeamLoadVisualizer({ L, pointLoads, onPointLoadsChange, udls = [
       const x = clamp(fromX(p.x), 0, beamL)
       updateMoment(drag.index, { x: x.toFixed(2) })
     }
+    if (drag.kind === 'support') {
+      const x = clamp(fromX(p.x), 0, beamL)
+      updateSupport(drag.index, { x: x.toFixed(2) })
+    }
   }
 
   return (
-    <Panel title="Beam Diagram" subtitle="Drag load arrow tips to move loads and change magnitude. Drag moment bubbles to shift applied moment location.">
+    <Panel title="Beam Diagram" subtitle="Drag support markers to move supports. Drag load arrow tips to move/change loads. UVL/UDL are rendered on the span.">
       <Box sx={{ overflowX: 'auto' }}>
         <svg
           width={width}
@@ -281,8 +301,46 @@ export function BeamLoadVisualizer({ L, pointLoads, onPointLoadsChange, udls = [
           </defs>
 
           <line x1={x0} y1={yBeam} x2={x1} y2={yBeam} stroke="#334155" strokeWidth="5" strokeLinecap="round" />
-          <text x={x0} y={yBeam + 24} fill="#64748B" fontSize="12">A (pin)</text>
-          <text x={x1 - 44} y={yBeam + 24} fill="#64748B" fontSize="12">B (roller)</text>
+
+          {supports.map((s, i) => {
+            const sx = mapX(N(s.x))
+            const id = s.id ?? `S${i + 1}`
+            const st = s.type ?? 'rollerY'
+            if (st === 'fixed') {
+              return (
+                <g key={`sup-${i}`}>
+                  <rect x={sx - 7} y={yBeam - 42} width="14" height="42" fill="#94A3B8" onPointerDown={() => setDrag({ kind: 'support', index: i })} style={{ cursor: 'grab' }} />
+                  <text x={sx - 12} y={yBeam + 18} fill="#475569" fontSize="11">{id}</text>
+                </g>
+              )
+            }
+            if (st === 'pin') {
+              return (
+                <g key={`sup-${i}`}>
+                  <polygon points={`${sx - 12},${yBeam + 1} ${sx + 12},${yBeam + 1} ${sx},${yBeam + 18}`} fill="#64748B" onPointerDown={() => setDrag({ kind: 'support', index: i })} style={{ cursor: 'grab' }} />
+                  <text x={sx - 12} y={yBeam + 30} fill="#475569" fontSize="11">{id}</text>
+                </g>
+              )
+            }
+            if (st === 'rollerX') {
+              return (
+                <g key={`sup-${i}`}>
+                  <rect x={sx - 8} y={yBeam - 20} width="16" height="18" fill="#64748B" onPointerDown={() => setDrag({ kind: 'support', index: i })} style={{ cursor: 'grab' }} />
+                  <circle cx={sx - 10} cy={yBeam - 11} r="3" fill="#94A3B8" />
+                  <circle cx={sx + 10} cy={yBeam - 11} r="3" fill="#94A3B8" />
+                  <text x={sx - 12} y={yBeam + 18} fill="#475569" fontSize="11">{id}</text>
+                </g>
+              )
+            }
+            return (
+              <g key={`sup-${i}`}>
+                <circle cx={sx - 7} cy={yBeam + 8} r="4" fill="#94A3B8" />
+                <circle cx={sx + 7} cy={yBeam + 8} r="4" fill="#94A3B8" />
+                <polygon points={`${sx - 12},${yBeam + 1} ${sx + 12},${yBeam + 1} ${sx},${yBeam + 14}`} fill="#64748B" onPointerDown={() => setDrag({ kind: 'support', index: i })} style={{ cursor: 'grab' }} />
+                <text x={sx - 12} y={yBeam + 28} fill="#475569" fontSize="11">{id}</text>
+              </g>
+            )
+          })}
 
           <line x1={x0} y1={yBeam + 16} x2={x1} y2={yBeam + 16} stroke="#CBD5E1" strokeDasharray="4 4" />
           <text x={(x0 + x1) / 2 - 22} y={yBeam + 32} fill="#64748B" fontSize="12">L = {beamL.toFixed(2)} m</text>
@@ -294,6 +352,21 @@ export function BeamLoadVisualizer({ L, pointLoads, onPointLoadsChange, udls = [
               <g key={`udl-${i}`}>
                 <rect x={Math.min(sx1, sx2)} y={76} width={Math.abs(sx2 - sx1)} height={22} fill="#DBEAFE" stroke="#60A5FA" />
                 <text x={Math.min(sx1, sx2) + 4} y={90} fill="#1D4ED8" fontSize="11">w={N(u.w).toFixed(1)} N/m</text>
+              </g>
+            )
+          })}
+
+          {uvls.map((u, i) => {
+            const sx1 = mapX(N(u.x1))
+            const sx2 = mapX(N(u.x2))
+            const leftH = clamp(N(u.w1) / 180, 6, 36)
+            const rightH = clamp(N(u.w2) / 180, 6, 36)
+            const topL = yBeam - 24 - leftH
+            const topR = yBeam - 24 - rightH
+            return (
+              <g key={`uvl-${i}`}>
+                <polygon points={`${sx1},${yBeam - 24} ${sx2},${yBeam - 24} ${sx2},${topR} ${sx1},${topL}`} fill="#FFE7C2" stroke="#F59E0B" />
+                <text x={Math.min(sx1, sx2) + 4} y={yBeam - 28} fill="#B45309" fontSize="11">w: {N(u.w1).toFixed(1)} to {N(u.w2).toFixed(1)} N/m</text>
               </g>
             )
           })}
@@ -753,6 +826,106 @@ export function FrictionVisualizer({ W, mu_s, mu_k, P, theta, onPChange, onTheta
       <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap', mt: 0.75 }}>
         <Chip size="small" label={`Fs,max = ${staticLimit.toFixed(2)} N`} sx={{ bgcolor: '#DCFCE7', color: '#166534', fontWeight: 600 }} />
         <Chip size="small" label={`Fk = ${kinetic.toFixed(2)} N`} sx={{ bgcolor: '#FFE4E6', color: '#9F1239', fontWeight: 600 }} />
+      </Box>
+    </Panel>
+  )
+}
+
+export function ShearMomentChart({ L, diagram = [], query }) {
+  const width = 700
+  const height = 360
+  const left = 46
+  const right = width - 20
+  const top = 24
+  const mid = 178
+  const bottom = height - 28
+
+  const [hover, setHover] = useState(null)
+
+  const safeDiagram = Array.isArray(diagram) && diagram.length > 1 ? diagram : [{ x: 0, V: 0, M: 0 }, { x: L || 1, V: 0, M: 0 }]
+
+  const ext = useMemo(() => {
+    const Vs = safeDiagram.map((d) => d.V)
+    const Ms = safeDiagram.map((d) => d.M)
+    const padV = Math.max(1e-6, (Math.max(...Vs) - Math.min(...Vs)) * 0.15 + 1)
+    const padM = Math.max(1e-6, (Math.max(...Ms) - Math.min(...Ms)) * 0.15 + 1)
+    return {
+      Vmin: Math.min(...Vs) - padV,
+      Vmax: Math.max(...Vs) + padV,
+      Mmin: Math.min(...Ms) - padM,
+      Mmax: Math.max(...Ms) + padM,
+    }
+  }, [safeDiagram])
+
+  const xToPx = (x) => left + (x / (L || 1)) * (right - left)
+  const yV = (v) => top + ((ext.Vmax - v) / (ext.Vmax - ext.Vmin || 1)) * (mid - top - 6)
+  const yM = (m) => mid + 12 + ((ext.Mmax - m) / (ext.Mmax - ext.Mmin || 1)) * (bottom - mid - 12)
+
+  const pathV = safeDiagram.map((d, i) => `${i === 0 ? 'M' : 'L'} ${xToPx(d.x)} ${yV(d.V)}`).join(' ')
+  const pathM = safeDiagram.map((d, i) => `${i === 0 ? 'M' : 'L'} ${xToPx(d.x)} ${yM(d.M)}`).join(' ')
+
+  const nearest = (xVal) => {
+    let best = safeDiagram[0]
+    let bestDx = Math.abs(safeDiagram[0].x - xVal)
+    for (let i = 1; i < safeDiagram.length; i++) {
+      const dx = Math.abs(safeDiagram[i].x - xVal)
+      if (dx < bestDx) {
+        bestDx = dx
+        best = safeDiagram[i]
+      }
+    }
+    return best
+  }
+
+  const onMove = (evt) => {
+    const rect = evt.currentTarget.getBoundingClientRect()
+    const sx = evt.clientX - rect.left
+    const xVal = clamp(((sx - left) / (right - left)) * (L || 1), 0, L || 1)
+    const pt = nearest(xVal)
+    setHover({ pt, sx: xToPx(pt.x) })
+  }
+
+  return (
+    <Panel title="Shear Force & Bending Moment Diagrams" subtitle="Move your mouse on the graph to inspect local values with tooltip.">
+      <Box sx={{ overflowX: 'auto' }}>
+        <svg width={width} height={height} onMouseMove={onMove} onMouseLeave={() => setHover(null)} style={{ maxWidth: '100%', borderRadius: 12, background: 'linear-gradient(180deg,#FFFFFF,#F7FAFF)' }}>
+          <line x1={left} y1={mid} x2={right} y2={mid} stroke="#CBD5E1" strokeWidth="1.5" />
+          <line x1={left} y1={top} x2={left} y2={mid - 6} stroke="#CBD5E1" strokeWidth="1" />
+          <line x1={left} y1={mid + 12} x2={left} y2={bottom} stroke="#CBD5E1" strokeWidth="1" />
+
+          <text x={left + 6} y={top + 12} fill="#0F172A" fontSize="12" fontWeight="600">Shear Force V(x)</text>
+          <text x={left + 6} y={mid + 26} fill="#0F172A" fontSize="12" fontWeight="600">Bending Moment M(x)</text>
+
+          <line x1={left} y1={yV(0)} x2={right} y2={yV(0)} stroke="#E2E8F0" strokeDasharray="5 4" />
+          <line x1={left} y1={yM(0)} x2={right} y2={yM(0)} stroke="#E2E8F0" strokeDasharray="5 4" />
+
+          <path d={pathV} fill="none" stroke="#006E2C" strokeWidth="2.5" />
+          <path d={pathM} fill="none" stroke="#8C1D18" strokeWidth="2.5" />
+
+          {query && (
+            <>
+              <line x1={xToPx(query.x)} y1={top} x2={xToPx(query.x)} y2={bottom} stroke="#1D4ED8" strokeDasharray="4 4" />
+              <circle cx={xToPx(query.x)} cy={yV(query.V)} r="4" fill="#006E2C" />
+              <circle cx={xToPx(query.x)} cy={yM(query.M)} r="4" fill="#8C1D18" />
+            </>
+          )}
+
+          {hover && (
+            <>
+              <line x1={hover.sx} y1={top} x2={hover.sx} y2={bottom} stroke="#64748B" strokeDasharray="3 4" />
+              <circle cx={hover.sx} cy={yV(hover.pt.V)} r="4" fill="#006E2C" />
+              <circle cx={hover.sx} cy={yM(hover.pt.M)} r="4" fill="#8C1D18" />
+
+              <rect x={Math.min(hover.sx + 10, right - 170)} y={top + 8} width="160" height="56" rx="8" fill="#0F172A" opacity="0.9" />
+              <text x={Math.min(hover.sx + 18, right - 162)} y={top + 25} fill="#E2E8F0" fontSize="11">x = {hover.pt.x.toFixed(3)} m</text>
+              <text x={Math.min(hover.sx + 18, right - 162)} y={top + 40} fill="#86EFAC" fontSize="11">V = {hover.pt.V.toFixed(3)} N</text>
+              <text x={Math.min(hover.sx + 18, right - 162)} y={top + 55} fill="#FCA5A5" fontSize="11">M = {hover.pt.M.toFixed(3)} N.m</text>
+            </>
+          )}
+
+          <text x={left} y={bottom + 14} fill="#475569" fontSize="11">0</text>
+          <text x={right - 12} y={bottom + 14} fill="#475569" fontSize="11">{(L || 0).toFixed(2)} m</text>
+        </svg>
       </Box>
     </Panel>
   )
