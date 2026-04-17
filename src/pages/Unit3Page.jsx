@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CalculateIcon from '@mui/icons-material/Calculate'
 import { StepDisplay, ResultRow } from '../components/StepDisplay.jsx'
+import { BeamVisualizer, CompositeShapeVisualizer } from '../components/Visualizations.jsx'
 import { SHAPE_DEFS, solveCentroid } from '../solvers/unit3.js'
 import { solveBeamEquilibrium } from '../solvers/unit2.js'
 
@@ -51,6 +52,12 @@ function CentroidTool() {
         Build a composite area by adding shapes. Tick <strong>Hole</strong> to subtract that shape's area.
         x₀, y₀ is the reference corner/centre of each shape (see label below shape type).
       </Typography>
+
+      <CompositeShapeVisualizer
+        shapes={shapes}
+        centroid={result ? { x: result.result.Xbar, y: result.result.Ybar } : null}
+        title="Composite Area Sketch"
+      />
 
       {shapes.map((s, i) => {
         const def = SHAPE_DEFS[s.type]
@@ -173,6 +180,16 @@ function BeamReactionsTool() {
       <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
         Find support reactions for a simply supported beam (pin at A, roller at B). Typically used with Unit 3 distributed load problems.
       </Typography>
+
+      <BeamVisualizer
+        L={L}
+        pointLoads={pointLoads}
+        udls={udls}
+        moments={[]}
+        reactions={result?.result ?? null}
+        title="Beam Loading Sketch"
+        onPointLoadMove={(i, x) => updPL(i, 'x', x.toFixed(3))}
+      />
 
       <TextField label="Beam length L (m)" value={L} onChange={(e) => setL(e.target.value)} sx={{ mb: 2, width: 200 }} />
 
