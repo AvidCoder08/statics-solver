@@ -1,6 +1,6 @@
 // ── Unit 4 Solvers ──────────────────────────────────────────────────────────
 
-const fmt = (v, n = 4) => Number(v).toFixed(n)
+const fmt = (v, n = 2) => Number(v).toFixed(n)
 const d2r = (d) => (d * Math.PI) / 180
 
 // ── Shape MOI about own centroidal axes ─────────────────────────────────────
@@ -217,7 +217,7 @@ export function solveFrictionInclined({ W, theta, mu_s, mu_k, P = 0 }) {
     lines: [
       `F_s,max = μs × N = ${fmt(mu_s)} × ${fmt(N)} = ${fmt(F_s_max)} N`,
       `F_k     = μk × N = ${fmt(mu_k)} × ${fmt(N)} = ${fmt(F_k)} N`,
-      `Angle of friction: φ = tan⁻¹(μs) = ${fmt(phi, 3)}°`,
+      `Angle of friction: φ = tan⁻¹(μs) = ${fmt(phi)}°`,
     ],
   })
 
@@ -265,7 +265,7 @@ export function solveFrictionInclined({ W, theta, mu_s, mu_k, P = 0 }) {
   return {
     result: {
       N: fmt(N), Wslope: fmt(Wslope), F_s_max: fmt(F_s_max), F_k: fmt(F_k),
-      phi: fmt(phi, 3), P_min: fmt(P_min), P_max: fmt(P_max),
+      phi: fmt(phi), P_min: fmt(P_min), P_max: fmt(P_max),
       status, friction: fmt(f),
     },
     steps, error: null,

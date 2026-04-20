@@ -1,7 +1,7 @@
 // ── Unit 2 Solvers ──────────────────────────────────────────────────────────
 
 const d2r = (d) => (d * Math.PI) / 180
-const fmt = (v, n = 4) => Number(v).toFixed(n)
+const fmt = (v, n = 2) => Number(v).toFixed(n)
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 
 // ── Gaussian Elimination ─────────────────────────────────────────────────────

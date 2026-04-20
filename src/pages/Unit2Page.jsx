@@ -245,8 +245,8 @@ function BeamEquilibriumTool() {
                 <TextField label="x (m)" size="small" value={xQuery} onChange={(e) => setXQuery(e.target.value)} sx={{ width: 120 }} />
                 <Button size="small" variant="outlined" onClick={updatePointQuery}>Evaluate at x</Button>
               </Box>
-              <ResultRow label="V(x)" value={diagram.atQuery.V.toFixed(4)} unit="N" />
-              <ResultRow label="M(x)" value={diagram.atQuery.M.toFixed(4)} unit="N·m" />
+              <ResultRow label="V(x)" value={diagram.atQuery.V.toFixed(2)} unit="N" />
+              <ResultRow label="M(x)" value={diagram.atQuery.M.toFixed(2)} unit="N·m" />
               <ShearMomentChart L={N(L)} diagram={diagram.data} query={diagram.atQuery} />
             </>
           )}
@@ -435,8 +435,8 @@ function TrussJointsTool() {
           <Typography variant="subtitle2" sx={{ mb: 1 }}>Support Reactions</Typography>
           {Object.entries(result.result.reactions).map(([nodeId, r]) => (
             <Box key={nodeId}>
-              <ResultRow label={`Node ${nodeId} — Rx`} value={Number(r.Rx).toFixed(4)} unit="N" />
-              <ResultRow label={`Node ${nodeId} — Ry`} value={Number(r.Ry).toFixed(4)} unit="N" />
+              <ResultRow label={`Node ${nodeId} — Rx`} value={Number(r.Rx).toFixed(2)} unit="N" />
+              <ResultRow label={`Node ${nodeId} — Ry`} value={Number(r.Ry).toFixed(2)} unit="N" />
             </Box>
           ))}
 

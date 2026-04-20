@@ -3,7 +3,7 @@
 
 const r2d = (r) => (r * 180) / Math.PI
 const d2r = (d) => (d * Math.PI) / 180
-const fmt = (v, n = 4) => Number(v).toFixed(n)
+const fmt = (v, n = 2) => Number(v).toFixed(n)
 
 // ── Force Resultant ──────────────────────────────────────────────────────────
 export function solveForceResultant(forces) {
@@ -46,9 +46,9 @@ export function solveForceResultant(forces) {
     type: 'calc',
     label: 'Resultant',
     lines: [
-      `R = √(Rx² + Ry²) = √(${fmt(Rx, 3)}² + ${fmt(Ry, 3)}²)`,
+      `R = √(Rx² + Ry²) = √(${fmt(Rx)}² + ${fmt(Ry)}²)`,
       `R = ${fmt(R)} N`,
-      `θ = tan⁻¹(Ry / Rx) = tan⁻¹(${fmt(Ry, 3)} / ${fmt(Rx, 3)}) = ${fmt(theta, 3)}°`,
+      `θ = tan⁻¹(Ry / Rx) = tan⁻¹(${fmt(Ry)} / ${fmt(Rx)}) = ${fmt(theta)}°`,
       `(measured from +x axis, CCW positive)`,
     ],
   })
@@ -58,7 +58,7 @@ export function solveForceResultant(forces) {
       Rx: fmt(Rx),
       Ry: fmt(Ry),
       R: fmt(R),
-      theta: fmt(theta, 3),
+      theta: fmt(theta),
     },
     steps,
     error: null,
@@ -93,10 +93,10 @@ export function solveMoment(entries) {
       type: 'calc',
       label: `Force ${i + 1}   (rx = ${fmt(e.rx, 2)}, ry = ${fmt(e.ry, 2)})`,
       lines: [
-        `Fx = ${fmt(Fx, 4)} N`,
-        `Fy = ${fmt(Fy, 4)} N`,
-        `M${i + 1} = (${fmt(e.rx, 3)}) × (${fmt(Fy, 4)}) − (${fmt(e.ry, 3)}) × (${fmt(Fx, 4)})`,
-        `M${i + 1} = ${fmt(m, 4)} N·m`,
+        `Fx = ${fmt(Fx)} N`,
+        `Fy = ${fmt(Fy)} N`,
+        `M${i + 1} = (${fmt(e.rx)}) × (${fmt(Fy)}) − (${fmt(e.ry)}) × (${fmt(Fx)})`,
+        `M${i + 1} = ${fmt(m)} N·m`,
       ],
     })
   })
@@ -105,12 +105,12 @@ export function solveMoment(entries) {
   steps.push({
     type: 'result',
     lines: [
-      `M_total = ${fmt(M, 4)} N·m  ${M >= 0 ? '↺ CCW' : '↻ CW'}`,
+      `M_total = ${fmt(M)} N·m  ${M >= 0 ? '↺ CCW' : '↻ CW'}`,
     ],
   })
 
   return {
-    result: { M: fmt(M, 4), direction: M >= 0 ? 'CCW ↺' : 'CW ↻' },
+    result: { M: fmt(M), direction: M >= 0 ? 'CCW ↺' : 'CW ↻' },
     steps,
     error: null,
   }
@@ -126,8 +126,8 @@ export function solveCouple(F, d) {
       type: 'calc',
       label: 'Calculation',
       lines: [
-        `C = ${fmt(F, 3)} × ${fmt(d, 3)}`,
-        `C = ${fmt(C, 4)} N·m`,
+        `C = ${fmt(F)} × ${fmt(d)}`,
+        `C = ${fmt(C)} N·m`,
       ],
     },
     {
@@ -136,7 +136,7 @@ export function solveCouple(F, d) {
     },
   ]
   return {
-    result: { C: fmt(C, 4) },
+    result: { C: fmt(C) },
     steps,
     error: null,
   }
@@ -162,7 +162,7 @@ export function solveResultant2D(forces, moments = []) {
       label: `F${i + 1} = ${fmt(f.F)} N @ ${fmt(f.angle)}°`,
       lines: [
         `Fx = ${fmt(fx)} N,  Fy = ${fmt(fy)} N`,
-        `M_O (from F${i + 1}) = ${fmt(f.rx)} × ${fmt(fy, 4)} − ${fmt(f.ry)} × ${fmt(fx, 4)} = ${fmt(m)} N·m`,
+        `M_O (from F${i + 1}) = ${fmt(f.rx)} × ${fmt(fy)} − ${fmt(f.ry)} × ${fmt(fx)} = ${fmt(m)} N·m`,
       ],
     })
   })
@@ -186,14 +186,14 @@ export function solveResultant2D(forces, moments = []) {
       `Rx = ${fmt(Rx)} N`,
       `Ry = ${fmt(Ry)} N`,
       `R  = ${fmt(R)} N`,
-      `θ  = ${fmt(theta, 3)}° from +x axis`,
+      `θ  = ${fmt(theta)}° from +x axis`,
       `M_O = ${fmt(Mo)} N·m  (moment of resultant about origin)`,
       R > 1e-10 ? `Line of action: d = M_O / R = ${fmt(Mo / R)} m from origin (⊥ to R)` : '(Force couple system — no single resultant line)',
     ],
   })
 
   return {
-    result: { Rx: fmt(Rx), Ry: fmt(Ry), R: fmt(R), theta: fmt(theta, 3), Mo: fmt(Mo) },
+    result: { Rx: fmt(Rx), Ry: fmt(Ry), R: fmt(R), theta: fmt(theta), Mo: fmt(Mo) },
     steps,
     error: null,
   }

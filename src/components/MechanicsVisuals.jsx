@@ -178,6 +178,8 @@ export function ForceSystemVisualizer({
                   onPointerDown={() => setDragState({ kind: 'tip', index: idx })}
                   style={{ cursor: 'grab' }}
                 />
+                <text x={e.x + 9} y={e.y - 9} fill={c} fontSize="11" fontWeight="700">F{idx + 1}</text>
+                {showPosition && <text x={b.x + 9} y={b.y + 12} fill={c} fontSize="10">r{idx + 1}</text>}
               </g>
             )
           })}
@@ -216,11 +218,11 @@ export function CoupleVisualizer({ F, d }) {
           <line x1="190" y1="150" x2="190" y2="70" stroke="#0054C8" strokeWidth="3" markerEnd="url(#cpArrow)" />
           <line x1="370" y1="70" x2="370" y2="150" stroke="#8C1D18" strokeWidth="3" markerEnd="url(#cpArrow)" />
           <line x1="190" y1="185" x2="370" y2="185" stroke="#64748B" strokeDasharray="5 4" />
-          <text x="276" y="202" fill="#475569" fontSize="12">d = {dist.toFixed(3)} m</text>
+          <text x="276" y="202" fill="#475569" fontSize="12">d12 = {dist.toFixed(3)} m</text>
           <path d="M210,55 A85,85 0 0,1 350,55" fill="none" stroke="#0F766E" strokeWidth="2.5" markerEnd="url(#cpArrow)" />
-          <text x="245" y="44" fill="#0F766E" fontSize="13" fontWeight="600">C = {moment.toFixed(3)} N.m</text>
-          <text x="134" y="66" fill="#0054C8" fontSize="12">F = {force.toFixed(2)} N</text>
-          <text x="348" y="66" fill="#8C1D18" fontSize="12">F = {force.toFixed(2)} N</text>
+          <text x="245" y="44" fill="#0F766E" fontSize="13" fontWeight="600">M1 = C = {moment.toFixed(3)} N.m</text>
+          <text x="134" y="66" fill="#0054C8" fontSize="12">F1 = {force.toFixed(2)} N</text>
+          <text x="348" y="66" fill="#8C1D18" fontSize="12">F2 = {force.toFixed(2)} N</text>
         </svg>
       </Box>
     </Panel>
@@ -319,7 +321,7 @@ export function BeamLoadVisualizer({
               return (
                 <g key={`sup-${i}`}>
                   <rect x={sx - 7} y={yBeam - 42} width="14" height="42" fill="#94A3B8" onPointerDown={() => setDrag({ kind: 'support', index: i })} style={{ cursor: 'grab' }} />
-                  <text x={sx - 12} y={yBeam + 18} fill="#475569" fontSize="11">{id}</text>
+                  <text x={sx - 12} y={yBeam + 18} fill="#475569" fontSize="11">{id} (S{i + 1})</text>
                 </g>
               )
             }
@@ -327,7 +329,7 @@ export function BeamLoadVisualizer({
               return (
                 <g key={`sup-${i}`}>
                   <polygon points={`${sx - 12},${yBeam + 1} ${sx + 12},${yBeam + 1} ${sx},${yBeam + 18}`} fill="#64748B" onPointerDown={() => setDrag({ kind: 'support', index: i })} style={{ cursor: 'grab' }} />
-                  <text x={sx - 12} y={yBeam + 30} fill="#475569" fontSize="11">{id}</text>
+                  <text x={sx - 12} y={yBeam + 30} fill="#475569" fontSize="11">{id} (S{i + 1})</text>
                 </g>
               )
             }
@@ -337,7 +339,7 @@ export function BeamLoadVisualizer({
                   <rect x={sx - 8} y={yBeam - 20} width="16" height="18" fill="#64748B" onPointerDown={() => setDrag({ kind: 'support', index: i })} style={{ cursor: 'grab' }} />
                   <circle cx={sx - 10} cy={yBeam - 11} r="3" fill="#94A3B8" />
                   <circle cx={sx + 10} cy={yBeam - 11} r="3" fill="#94A3B8" />
-                  <text x={sx - 12} y={yBeam + 18} fill="#475569" fontSize="11">{id}</text>
+                  <text x={sx - 12} y={yBeam + 18} fill="#475569" fontSize="11">{id} (S{i + 1})</text>
                 </g>
               )
             }
@@ -346,7 +348,7 @@ export function BeamLoadVisualizer({
                 <circle cx={sx - 7} cy={yBeam + 8} r="4" fill="#94A3B8" />
                 <circle cx={sx + 7} cy={yBeam + 8} r="4" fill="#94A3B8" />
                 <polygon points={`${sx - 12},${yBeam + 1} ${sx + 12},${yBeam + 1} ${sx},${yBeam + 14}`} fill="#64748B" onPointerDown={() => setDrag({ kind: 'support', index: i })} style={{ cursor: 'grab' }} />
-                <text x={sx - 12} y={yBeam + 28} fill="#475569" fontSize="11">{id}</text>
+                <text x={sx - 12} y={yBeam + 28} fill="#475569" fontSize="11">{id} (S{i + 1})</text>
               </g>
             )
           })}
@@ -360,7 +362,7 @@ export function BeamLoadVisualizer({
             return (
               <g key={`udl-${i}`}>
                 <rect x={Math.min(sx1, sx2)} y={76} width={Math.abs(sx2 - sx1)} height={22} fill="#DBEAFE" stroke="#60A5FA" />
-                <text x={Math.min(sx1, sx2) + 4} y={90} fill="#1D4ED8" fontSize="11">w={N(u.w).toFixed(1)} N/m</text>
+                <text x={Math.min(sx1, sx2) + 4} y={90} fill="#1D4ED8" fontSize="11">UDL{i + 1}: w={N(u.w).toFixed(1)} N/m</text>
               </g>
             )
           })}
@@ -375,7 +377,7 @@ export function BeamLoadVisualizer({
             return (
               <g key={`uvl-${i}`}>
                 <polygon points={`${sx1},${yBeam - 24} ${sx2},${yBeam - 24} ${sx2},${topR} ${sx1},${topL}`} fill="#FFE7C2" stroke="#F59E0B" />
-                <text x={Math.min(sx1, sx2) + 4} y={yBeam - 28} fill="#B45309" fontSize="11">w: {N(u.w1).toFixed(1)} to {N(u.w2).toFixed(1)} N/m</text>
+                <text x={Math.min(sx1, sx2) + 4} y={yBeam - 28} fill="#B45309" fontSize="11">UVL{i + 1}: w {N(u.w1).toFixed(1)} to {N(u.w2).toFixed(1)} N/m</text>
               </g>
             )
           })}
@@ -519,13 +521,21 @@ export function TrussVisualizer({ nodes, onNodesChange, members, loads, onLoadsC
             </marker>
           </defs>
 
-          {members.map((m) => {
+          {members.map((m, i) => {
             const a = nodeMap[m.nodeA]
             const b = nodeMap[m.nodeB]
             if (!a || !b) return null
             const sa = map(N(a.x), N(a.y))
             const sb = map(N(b.x), N(b.y))
-            return <line key={m.id} x1={sa.x} y1={sa.y} x2={sb.x} y2={sb.y} stroke="#334155" strokeWidth="3" />
+            const mx = (sa.x + sb.x) / 2
+            const my = (sa.y + sb.y) / 2
+            const label = m.id || `M${i + 1}`
+            return (
+              <g key={m.id || `mem-${i}`}>
+                <line x1={sa.x} y1={sa.y} x2={sb.x} y2={sb.y} stroke="#334155" strokeWidth="3" />
+                <text x={mx + 6} y={my - 6} fill="#334155" fontSize="11" fontWeight="600">{label}</text>
+              </g>
+            )
           })}
 
           {nodes.map((n, i) => {
@@ -540,7 +550,7 @@ export function TrussVisualizer({ nodes, onNodesChange, members, loads, onLoadsC
                   onPointerDown={() => setDrag({ kind: 'node', index: i })}
                   style={{ cursor: 'grab' }}
                 />
-                <text x={s.x + 10} y={s.y - 10} fill="#0F172A" fontSize="12" fontWeight="600">{n.id}</text>
+                <text x={s.x + 10} y={s.y - 10} fill="#0F172A" fontSize="12" fontWeight="600">N{i + 1}: {n.id}</text>
               </g>
             )
           })}
@@ -562,6 +572,7 @@ export function TrussVisualizer({ nodes, onNodesChange, members, loads, onLoadsC
                   onPointerDown={() => setDrag({ kind: 'load', index: i })}
                   style={{ cursor: 'grab' }}
                 />
+                <text x={tx + 8} y={ty - 6} fill="#8C1D18" fontSize="11">L{i + 1}: Fx={N(l.Fx).toFixed(1)}, Fy={N(l.Fy).toFixed(1)}</text>
               </g>
             )
           })}
@@ -717,6 +728,9 @@ export function CompositeAreaVisualizer({ shapes, onShapesChange, title = 'Compo
               <g key={`h-${i}`}>
                 <circle cx={p.x} cy={p.y} r="11" fill="#0F172A" onPointerDown={() => setDrag({ index: i })} style={{ cursor: 'grab' }} />
                 <text x={p.x - 4} y={p.y + 4} fill="#FFFFFF" fontSize="10" fontWeight="700">{i + 1}</text>
+                <text x={p.x + 14} y={p.y + 4} fill={s.hole ? '#8C1D18' : '#1D4ED8'} fontSize="11" fontWeight="600">
+                  {s.hole ? `H${i + 1}` : `A${i + 1}`}
+                </text>
               </g>
             )
           })}
@@ -808,7 +822,7 @@ export function FrictionVisualizer({ W, mu_s, mu_k, P, theta, onPChange, onTheta
           />
 
           <line x1={inclined ? x0 + 78 * Math.cos(t) : 250} y1={inclined ? y0 - 78 * Math.sin(t) : 145} x2={inclined ? x0 + 78 * Math.cos(t) : 250} y2={inclined ? y0 - 78 * Math.sin(t) + 72 : 215} stroke="#0054C8" strokeWidth="2.5" markerEnd="url(#frArrow)" />
-          <text x={inclined ? x0 + 86 * Math.cos(t) : 258} y={inclined ? y0 - 78 * Math.sin(t) + 16 : 154} fill="#0054C8" fontSize="11">W={weight.toFixed(1)} N</text>
+          <text x={inclined ? x0 + 86 * Math.cos(t) : 258} y={inclined ? y0 - 78 * Math.sin(t) + 16 : 154} fill="#0054C8" fontSize="11">W1={weight.toFixed(1)} N</text>
 
           {(() => {
             const bx = inclined ? x0 + 78 * Math.cos(t) : 250
@@ -823,12 +837,13 @@ export function FrictionVisualizer({ W, mu_s, mu_k, P, theta, onPChange, onTheta
               <g>
                 <line x1={bx} y1={by} x2={tx} y2={ty} stroke="#8C1D18" strokeWidth="2.5" markerEnd="url(#frArrow)" />
                 <circle cx={tx} cy={ty} r="6" fill="#8C1D18" onPointerDown={() => setDragging(true)} style={{ cursor: 'grab' }} />
-                <text x={tx + 8} y={ty - 6} fill="#8C1D18" fontSize="11">P={p.toFixed(1)} N</text>
+                <text x={tx + 8} y={ty - 6} fill="#8C1D18" fontSize="11">P1={p.toFixed(1)} N</text>
               </g>
             )
           })()}
 
-          {inclined && <text x={x0 + 18} y={y0 - 14} fill="#475569" fontSize="12">theta={th.toFixed(1)}deg</text>}
+          {inclined && <text x={x0 + 18} y={y0 - 14} fill="#475569" fontSize="12">theta1={th.toFixed(1)}deg</text>}
+          <text x={x0 + 6} y={y0 + 22} fill="#475569" fontSize="11">R1: Contact surface</text>
         </svg>
       </Box>
 
@@ -910,12 +925,15 @@ export function ShearMomentChart({ L, diagram = [], query }) {
 
           <path d={pathV} fill="none" stroke="#006E2C" strokeWidth="2.5" />
           <path d={pathM} fill="none" stroke="#8C1D18" strokeWidth="2.5" />
+          <text x={right - 132} y={top + 14} fill="#006E2C" fontSize="11" fontWeight="600">Curve C1: V(x)</text>
+          <text x={right - 132} y={top + 30} fill="#8C1D18" fontSize="11" fontWeight="600">Curve C2: M(x)</text>
 
           {query && (
             <>
               <line x1={xToPx(query.x)} y1={top} x2={xToPx(query.x)} y2={bottom} stroke="#1D4ED8" strokeDasharray="4 4" />
               <circle cx={xToPx(query.x)} cy={yV(query.V)} r="4" fill="#006E2C" />
               <circle cx={xToPx(query.x)} cy={yM(query.M)} r="4" fill="#8C1D18" />
+              <text x={xToPx(query.x) + 6} y={top + 16} fill="#1D4ED8" fontSize="11">Q1</text>
             </>
           )}
 

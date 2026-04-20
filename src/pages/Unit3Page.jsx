@@ -361,8 +361,8 @@ function BeamReactionsTool() {
                 <TextField label="x (m)" size="small" value={xQuery} onChange={(e) => setXQuery(e.target.value)} sx={{ width: 120 }} />
                 <Button size="small" variant="outlined" onClick={updatePointQuery}>Evaluate at x</Button>
               </Box>
-              <ResultRow label="V(x)" value={diagram.atQuery.V.toFixed(4)} unit="N" />
-              <ResultRow label="M(x)" value={diagram.atQuery.M.toFixed(4)} unit="N·m" />
+              <ResultRow label="V(x)" value={diagram.atQuery.V.toFixed(2)} unit="N" />
+              <ResultRow label="M(x)" value={diagram.atQuery.M.toFixed(2)} unit="N·m" />
               <ShearMomentChart L={N(L)} diagram={diagram.data} query={diagram.atQuery} />
             </>
           )}

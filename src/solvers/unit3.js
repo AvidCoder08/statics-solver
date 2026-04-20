@@ -1,6 +1,6 @@
 // ── Unit 3 Solvers ──────────────────────────────────────────────────────────
 
-const fmt = (v, n = 4) => Number(v).toFixed(n)
+const fmt = (v, n = 2) => Number(v).toFixed(n)
 
 // ── Shape Definitions ────────────────────────────────────────────────────────
 // Each shape specifies:
