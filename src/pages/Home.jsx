@@ -116,7 +116,7 @@ export default function Home() {
             <InstagramIcon fontSize="small" /> Instagram
           </Link>
           <Link
-            href="https://github.com/notacoder08"
+            href="https://github.com/AvidCoder08"
             target="_blank"
             rel="noopener noreferrer"
             underline="none"
@@ -125,7 +125,7 @@ export default function Home() {
             <GitHubIcon fontSize="small" /> GitHub
           </Link>
           <Link
-            href="https://www.linkedin.com/in/shashank-munnangi"
+            href="https://www.linkedin.com/in/shashankmunnangi/"
             target="_blank"
             rel="noopener noreferrer"
             underline="none"
