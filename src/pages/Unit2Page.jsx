@@ -116,7 +116,7 @@ function BeamEquilibriumTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Simply supported beam — pin at A (x=0), roller at B (x=L). Downward angle = 270°.
       </Typography>
 
@@ -171,7 +171,7 @@ function BeamEquilibriumTool() {
             </Select>
           </FormControl>
           <TextField label="x (m)" value={s.x} size="small" onChange={(e) => updSup(i, 'x', e.target.value)} sx={{ width: 130 }} />
-          <IconButton size="small" onClick={() => setSupports((sp) => sp.filter((_, j) => j !== i))} disabled={supports.length <= 1} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setSupports((sp) => sp.filter((_, j) => j !== i))} disabled={supports.length <= 1} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setSupports((sp) => [...sp, { id: `S${sp.length + 1}`, x: '', type: 'rollerY' }])} sx={{ mb: 2 }}>Add Support</Button>
@@ -182,7 +182,7 @@ function BeamEquilibriumTool() {
           <TextField label="Load P (N)" value={p.P} size="small" onChange={(e) => updPL(i, 'P', e.target.value)} sx={{ width: 130 }} />
           <TextField label="x from A (m)" value={p.x} size="small" onChange={(e) => updPL(i, 'x', e.target.value)} sx={{ width: 140 }} />
           <TextField label="Angle (°)" value={p.angle ?? '270'} size="small" onChange={(e) => updPL(i, 'angle', e.target.value)} sx={{ width: 110 }} />
-          <IconButton size="small" onClick={() => setPointLoads((pl) => pl.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setPointLoads((pl) => pl.filter((_, j) => j !== i))} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setPointLoads((pl) => [...pl, { P: '', x: '', angle: '270' }])} sx={{ mb: 2 }}>Add Load</Button>
@@ -193,7 +193,7 @@ function BeamEquilibriumTool() {
           <TextField label="w (N/m)" value={u.w} size="small" onChange={(e) => updUDL(i, 'w', e.target.value)} sx={{ width: 120 }} />
           <TextField label="From x1 (m)" value={u.x1} size="small" onChange={(e) => updUDL(i, 'x1', e.target.value)} sx={{ width: 130 }} />
           <TextField label="To x2 (m)" value={u.x2} size="small" onChange={(e) => updUDL(i, 'x2', e.target.value)} sx={{ width: 130 }} />
-          <IconButton size="small" onClick={() => setUdls((ud) => ud.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setUdls((ud) => ud.filter((_, j) => j !== i))} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setUdls((u) => [...u, { w: '', x1: '', x2: '' }])} sx={{ mb: 2 }}>Add UDL</Button>
@@ -205,7 +205,7 @@ function BeamEquilibriumTool() {
           <TextField label="w2 (N/m)" value={u.w2} size="small" onChange={(e) => updUVL(i, 'w2', e.target.value)} sx={{ width: 120 }} />
           <TextField label="From x1 (m)" value={u.x1} size="small" onChange={(e) => updUVL(i, 'x1', e.target.value)} sx={{ width: 130 }} />
           <TextField label="To x2 (m)" value={u.x2} size="small" onChange={(e) => updUVL(i, 'x2', e.target.value)} sx={{ width: 130 }} />
-          <IconButton size="small" onClick={() => setUvls((ul) => ul.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setUvls((ul) => ul.filter((_, j) => j !== i))} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setUvls((u) => [...u, { w1: '', w2: '', x1: '', x2: '' }])} sx={{ mb: 2 }}>Add UVL</Button>
@@ -215,7 +215,7 @@ function BeamEquilibriumTool() {
         <Box key={i} sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center' }}>
           <TextField label="M (N·m)" value={m.M} size="small" onChange={(e) => updMom(i, 'M', e.target.value)} sx={{ width: 130 }} />
           <TextField label="x from A (m)" value={m.x} size="small" onChange={(e) => updMom(i, 'x', e.target.value)} sx={{ width: 140 }} />
-          <IconButton size="small" onClick={() => setMoments((ms) => ms.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setMoments((ms) => ms.filter((_, j) => j !== i))} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setMoments((m) => [...m, { M: '', x: '' }])} sx={{ mb: 2 }}>Add Moment</Button>
@@ -308,7 +308,7 @@ function TrussJointsTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Define your truss geometry, members, supports, and loads. A sample triangular truss is pre-loaded.
         For sign convention: <strong>positive force = Tension, negative = Compression</strong>. Loads: Fy negative = downward.
       </Typography>
@@ -328,7 +328,7 @@ function TrussJointsTool() {
           <TextField label="Node ID" value={n.id} size="small" onChange={(e) => updNode(i, 'id', e.target.value)} sx={{ width: 90 }} />
           <TextField label="x (m)" value={n.x} size="small" onChange={(e) => updNode(i, 'x', e.target.value)} sx={{ width: 110 }} />
           <TextField label="y (m)" value={n.y} size="small" onChange={(e) => updNode(i, 'y', e.target.value)} sx={{ width: 110 }} />
-          <IconButton size="small" onClick={() => setNodes((ns) => ns.filter((_, j) => j !== i))} disabled={nodes.length <= 2} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setNodes((ns) => ns.filter((_, j) => j !== i))} disabled={nodes.length <= 2} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setNodes((ns) => [...ns, { id: '', x: '', y: '' }])} sx={{ mb: 2 }}>Add Node</Button>
@@ -350,7 +350,7 @@ function TrussJointsTool() {
               {nodeIds.map((id) => <MenuItem key={id} value={id}>{id}</MenuItem>)}
             </Select>
           </FormControl>
-          <IconButton size="small" onClick={() => setMembers((ms) => ms.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setMembers((ms) => ms.filter((_, j) => j !== i))} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setMembers((ms) => [...ms, { id: '', nodeA: nodeIds[0] ?? '', nodeB: nodeIds[1] ?? '' }])} sx={{ mb: 2 }}>Add Member</Button>
@@ -373,7 +373,7 @@ function TrussJointsTool() {
               <MenuItem value="rollerX">Roller ↔ (Rx only)</MenuItem>
             </Select>
           </FormControl>
-          <IconButton size="small" onClick={() => setSupports((ss) => ss.filter((_, j) => j !== i))} disabled={supports.length <= 1} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setSupports((ss) => ss.filter((_, j) => j !== i))} disabled={supports.length <= 1} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setSupports((ss) => [...ss, { nodeId: nodeIds[0] ?? '', type: 'rollerY' }])} sx={{ mb: 2 }}>Add Support</Button>
@@ -390,7 +390,7 @@ function TrussJointsTool() {
           </FormControl>
           <TextField label="Fx (N)" value={l.Fx} size="small" onChange={(e) => updLoad(i, 'Fx', e.target.value)} sx={{ width: 120 }} />
           <TextField label="Fy (N, neg=↓)" value={l.Fy} size="small" onChange={(e) => updLoad(i, 'Fy', e.target.value)} sx={{ width: 140 }} />
-          <IconButton size="small" onClick={() => setLoads((ls) => ls.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setLoads((ls) => ls.filter((_, j) => j !== i))} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setLoads((ls) => [...ls, { nodeId: nodeIds[0] ?? '', Fx: '0', Fy: '0' }])} sx={{ mb: 2 }}>Add Load</Button>
@@ -403,7 +403,7 @@ function TrussJointsTool() {
           <Typography variant="subtitle2" sx={{ mb: 1.5 }}>Member Forces</Typography>
           <Table size="small" sx={{ mb: 3 }}>
             <TableHead>
-              <TableRow sx={{ '& th': { bgcolor: '#F0F5FF' } }}>
+              <TableRow sx={{ '& th': { bgcolor: 'surfaceVariant' } }}>
                 <TableCell>Member</TableCell>
                 <TableCell>Nodes</TableCell>
                 <TableCell align="right">Force (N)</TableCell>
@@ -422,8 +422,8 @@ function TrussJointsTool() {
                     <Chip
                       label={m.type} size="small"
                       sx={{
-                        bgcolor: m.type === 'Tension' ? '#C6F0D8' : m.type === 'Compression' ? '#FFDAD6' : '#E0E3EA',
-                        color: m.type === 'Tension' ? '#006E2C' : m.type === 'Compression' ? '#8C1D18' : '#42474E',
+                        bgcolor: m.type === 'Tension' ? '#C6F0D8' : m.type === 'Compression' ? '#FFDAD6' : 'surfaceVariant',
+                        color: m.type === 'Tension' ? '#006E2C' : m.type === 'Compression' ? '#8C1D18' : 'text.secondary',
                         fontWeight: 700, fontSize: '0.72rem', borderRadius: 1.5,
                       }} />
                   </TableCell>
@@ -460,15 +460,15 @@ export default function Unit2Page() {
     <Box>
       <Box sx={{ mb: 3 }}>
         <Typography variant="caption" sx={{ color: '#006E2C', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Unit 2</Typography>
-        <Typography variant="h4" sx={{ color: '#1A1C1E', fontWeight: 700 }}>Equilibrium & Structures</Typography>
-        <Typography variant="body2" sx={{ color: '#42474E', mt: 0.5 }}>Simply supported beams · Plane trusses · Method of Joints</Typography>
+        <Typography variant="h4" sx={{ color: 'text.primary', fontWeight: 700 }}>Equilibrium & Structures</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>Simply supported beams · Plane trusses · Method of Joints</Typography>
       </Box>
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tab} onChange={(_, v) => setTab(v)}>
           {TOOLS.map((t) => <Tab key={t.label} label={t.label} />)}
         </Tabs>
       </Box>
-      <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid #E0E3EA', maxWidth: 820 }}>
+      <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', maxWidth: 820 }}>
         {TOOLS[tab].component}
       </Paper>
     </Box>

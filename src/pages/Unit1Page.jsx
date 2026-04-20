@@ -17,7 +17,7 @@ const valid = (...vals) => vals.every((v) => v !== '' && !isNaN(NUM(v)))
 function ForceRow({ f, i, onChange, onDelete, showPos = false }) {
   return (
     <Box sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center' }}>
-      <Typography sx={{ minWidth: 24, color: '#535F70', fontWeight: 600, fontSize: '0.8rem' }}>
+      <Typography sx={{ minWidth: 24, color: 'text.secondary', fontWeight: 600, fontSize: '0.8rem' }}>
         F{i + 1}
       </Typography>
       <TextField label="Magnitude (N)" value={f.F} size="small"
@@ -31,7 +31,7 @@ function ForceRow({ f, i, onChange, onDelete, showPos = false }) {
           onChange={(e) => onChange(i, 'ry', e.target.value)} sx={{ flex: 1 }} />
       </>}
       <IconButton size="small" onClick={() => onDelete(i)} disabled={i === 0}
-        sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+        sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
     </Box>
   )
 }
@@ -55,7 +55,7 @@ function ForceResultantTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Enter concurrent forces in 2D. Angle is measured from the +x axis (CCW positive).
       </Typography>
       <ForceSystemVisualizer
@@ -70,13 +70,13 @@ function ForceResultantTool() {
 
       {result && (
         <Box sx={{ mt: 3 }}>
-          <Typography variant="h6" sx={{ mb: 1.5, color: '#1A1C1E' }}>Results</Typography>
+          <Typography variant="h6" sx={{ mb: 1.5, color: 'text.primary' }}>Results</Typography>
           <ResultRow label="Rx" value={result.result.Rx} unit="N" />
           <ResultRow label="Ry" value={result.result.Ry} unit="N" />
           <ResultRow label="R (Resultant)" value={result.result.R} unit="N" />
           <ResultRow label="θ (from +x axis)" value={result.result.theta} unit="°" />
           <Divider sx={{ my: 2 }} />
-          <Typography variant="subtitle2" sx={{ mb: 1, color: '#42474E' }}>Step-by-step Solution</Typography>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>Step-by-step Solution</Typography>
           <StepDisplay steps={result.steps} />
         </Box>
       )}
@@ -103,7 +103,7 @@ function MomentTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Compute the moment of forces about the origin. rx and ry are the position vector components from the moment point to the force's point of application.
       </Typography>
       <ForceSystemVisualizer
@@ -142,7 +142,7 @@ function CoupleTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         A couple consists of two equal, opposite, parallel forces. Enter one force magnitude and the perpendicular distance between them.
       </Typography>
       <CoupleVisualizer F={F} d={d} />
@@ -185,7 +185,7 @@ function Resultant2DTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Reduce a 2D force system to a single resultant. Provide forces (with their points of application) and any applied couples.
       </Typography>
       <ForceSystemVisualizer
@@ -205,7 +205,7 @@ function Resultant2DTool() {
           <TextField label={`M${i + 1} (N·m)`} value={c.M} size="small"
             onChange={(e) => updC(i, e.target.value)} sx={{ width: 180 }} />
           <IconButton size="small" onClick={() => setCouples((cs) => cs.filter((_, j) => j !== i))}
-            disabled={couples.length === 1} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+            disabled={couples.length === 1} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setCouples((c) => [...c, { M: '' }])} sx={{ mb: 2 }}>Add Couple</Button>
@@ -241,9 +241,9 @@ export default function Unit1Page() {
   return (
     <Box>
       <Box sx={{ mb: 3 }}>
-        <Typography variant="caption" sx={{ color: '#0054C8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Unit 1</Typography>
-        <Typography variant="h4" sx={{ color: '#1A1C1E', fontWeight: 700 }}>Force Systems</Typography>
-        <Typography variant="body2" sx={{ color: '#42474E', mt: 0.5 }}>Rectangular components · Moments · Couples · Resultants</Typography>
+        <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Unit 1</Typography>
+        <Typography variant="h4" sx={{ color: 'text.primary', fontWeight: 700 }}>Force Systems</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>Rectangular components · Moments · Couples · Resultants</Typography>
       </Box>
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
@@ -252,7 +252,7 @@ export default function Unit1Page() {
         </Tabs>
       </Box>
 
-      <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid #E0E3EA', maxWidth: 760 }}>
+      <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', maxWidth: 760 }}>
         {TOOLS[tab].component}
       </Paper>
     </Box>

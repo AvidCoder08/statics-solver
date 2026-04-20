@@ -44,10 +44,10 @@ export default function Home() {
   return (
     <Box>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h3" sx={{ fontWeight: 700, color: '#1A1C1E', mb: 0.75 }}>
+        <Typography variant="h3" sx={{ fontWeight: 700, color: 'text.primary', mb: 0.75 }}>
           Engineering Mechanics
         </Typography>
-        <Typography variant="body1" sx={{ color: '#42474E', maxWidth: 520 }}>
+        <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: 520 }}>
           Solve problems, verify manual answers step-by-step.
           Covers all 4 units of your statics syllabus.
         </Typography>
@@ -56,7 +56,7 @@ export default function Home() {
       <Grid container spacing={2}>
         {UNITS.map((u) => (
           <Grid item xs={12} sm={6} key={u.path}>
-            <Card sx={{ height: '100%', borderRadius: 3, border: '1px solid #E0E3EA' }}>
+            <Card sx={{ height: '100%', borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
               <CardActionArea onClick={() => navigate(u.path)} sx={{ height: '100%', p: 0.5 }}>
                 <CardContent sx={{ p: 2.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
@@ -71,12 +71,12 @@ export default function Home() {
                       <Typography variant="caption" sx={{ color: u.color, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                         {u.label}
                       </Typography>
-                      <Typography variant="h6" sx={{ color: '#1A1C1E', lineHeight: 1.2 }}>
+                      <Typography variant="h6" sx={{ color: 'text.primary', lineHeight: 1.2 }}>
                         {u.title}
                       </Typography>
                     </Box>
                   </Box>
-                  <Typography variant="body2" sx={{ color: '#42474E', mb: 2, lineHeight: 1.6 }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2, lineHeight: 1.6 }}>
                     {u.desc}
                   </Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
@@ -92,17 +92,17 @@ export default function Home() {
         ))}
       </Grid>
 
-      <Box sx={{ mt: 4, p: 2.5, bgcolor: '#E8EEF6', borderRadius: 3, border: '1px solid #C5D5E8' }}>
-        <Typography variant="subtitle2" sx={{ color: '#0054C8', mb: 0.5 }}>How to use</Typography>
-        <Typography variant="body2" sx={{ color: '#2E3848', lineHeight: 1.7 }}>
+      <Box sx={{ mt: 4, p: 2.5, bgcolor: 'surfaceVariant', borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
+        <Typography variant="subtitle2" sx={{ color: 'primary.main', mb: 0.5 }}>How to use</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
           Pick a unit → select a tool → enter your values → click <strong>Calculate</strong>.
           Each solution is broken down step-by-step so you can check every line of your manual work.
         </Typography>
       </Box>
 
-      <Box sx={{ mt: 2, p: 2.5, bgcolor: '#FFF7EA', borderRadius: 3, border: '1px solid #F0D8AE' }}>
-        <Typography variant="subtitle2" sx={{ color: '#7D3B00', mb: 0.5 }}>About</Typography>
-        <Typography variant="body2" sx={{ color: '#4A3B2A', lineHeight: 1.7 }}>
+      <Box sx={{ mt: 2, p: 2.5, bgcolor: (t) => t.palette.mode === 'dark' ? 'rgba(249,189,103,0.12)' : '#FFF7EA', borderRadius: 3, border: '1px solid', borderColor: (t) => t.palette.mode === 'dark' ? 'rgba(249,189,103,0.35)' : '#F0D8AE' }}>
+        <Typography variant="subtitle2" sx={{ color: (t) => t.palette.mode === 'dark' ? '#F9BD67' : '#7D3B00', mb: 0.5 }}>About</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
           Made with {'💙'} by Shashank Munnangi (notacoder08)
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 1.5 }}>
@@ -111,7 +111,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
             underline="none"
-            sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: '#7D3B00', fontWeight: 600 }}
+            sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: (t) => t.palette.mode === 'dark' ? '#F9BD67' : '#7D3B00', fontWeight: 600 }}
           >
             <InstagramIcon fontSize="small" /> Instagram
           </Link>
@@ -120,7 +120,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
             underline="none"
-            sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: '#7D3B00', fontWeight: 600 }}
+            sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: (t) => t.palette.mode === 'dark' ? '#F9BD67' : '#7D3B00', fontWeight: 600 }}
           >
             <GitHubIcon fontSize="small" /> GitHub
           </Link>
@@ -129,7 +129,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
             underline="none"
-            sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: '#7D3B00', fontWeight: 600 }}
+            sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: (t) => t.palette.mode === 'dark' ? '#F9BD67' : '#7D3B00', fontWeight: 600 }}
           >
             <LinkedInIcon fontSize="small" /> LinkedIn
           </Link>

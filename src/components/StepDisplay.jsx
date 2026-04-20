@@ -13,20 +13,20 @@ export function StepDisplay({ steps }) {
           return (
             <Box key={i} sx={{ mt: i === 0 ? 0 : 2.5, mb: 1 }}>
               <Typography variant="subtitle2" sx={{
-                color: '#0054C8', fontWeight: 700,
+                color: 'primary.main', fontWeight: 700,
                 textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.72rem',
               }}>
                 {step.text}
               </Typography>
-              <Divider sx={{ mt: 0.5, borderColor: '#D7E3FF' }} />
+              <Divider sx={{ mt: 0.5, borderColor: 'divider' }} />
             </Box>
           )
         }
         if (step.type === 'note') {
           return (
             <Typography key={i} variant="body2" sx={{
-              color: '#42474E', mb: 0.75, fontStyle: 'italic',
-              pl: 1, borderLeft: '3px solid #D7E3FF',
+              color: 'text.secondary', mb: 0.75, fontStyle: 'italic',
+              pl: 1, borderLeft: '3px solid', borderColor: 'primary.light',
             }}>
               {step.text}
             </Typography>
@@ -50,12 +50,13 @@ export function StepDisplay({ steps }) {
           return (
             <Paper key={i} variant="outlined" sx={{
               p: 1.5, mb: 1.5, borderRadius: 2,
-              borderColor: '#0054C8', bgcolor: '#F0F5FF',
+              borderColor: 'primary.main',
+              bgcolor: (t) => t.palette.mode === 'dark' ? 'rgba(122,171,255,0.14)' : '#F0F5FF',
             }}>
               {step.lines.map((l, j) => (
                 <Typography key={j} sx={{
                   fontFamily: '"Roboto Mono", monospace',
-                  fontSize: '0.875rem', fontWeight: 600, color: '#003E9C', lineHeight: 1.8,
+                  fontSize: '0.875rem', fontWeight: 600, color: 'primary.main', lineHeight: 1.8,
                 }}>
                   {l}
                 </Typography>
@@ -68,17 +69,17 @@ export function StepDisplay({ steps }) {
           <Box key={i} sx={{ mb: 1.25 }}>
             {step.label && (
               <Typography variant="caption" sx={{
-                color: '#535F70', fontWeight: 600, display: 'block', mb: 0.25,
+                color: 'text.secondary', fontWeight: 600, display: 'block', mb: 0.25,
                 fontFamily: '"Google Sans", sans-serif',
               }}>
                 {step.label}
               </Typography>
             )}
-            <Paper variant="outlined" sx={{ px: 1.5, py: 1, borderRadius: 2, bgcolor: '#FAFCFF', borderColor: '#E0E3EA' }}>
+            <Paper variant="outlined" sx={{ px: 1.5, py: 1, borderRadius: 2, bgcolor: 'background.paper', borderColor: 'divider' }}>
               {step.lines?.map((l, j) => (
                 <Typography key={j} sx={{
                   fontFamily: '"Roboto Mono", monospace',
-                  fontSize: '0.8125rem', color: '#1A1C1E', lineHeight: 1.9,
+                  fontSize: '0.8125rem', color: 'text.primary', lineHeight: 1.9,
                   whiteSpace: 'pre-wrap',
                 }}>
                   {l}
@@ -97,15 +98,16 @@ export function ResultRow({ label, value, unit = '' }) {
   return (
     <Box sx={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      px: 2, py: 1, bgcolor: '#F0F5FF', borderRadius: 2, mb: 0.75,
-      border: '1px solid #C5D5E8',
+      px: 2, py: 1, borderRadius: 2, mb: 0.75,
+      bgcolor: (t) => t.palette.mode === 'dark' ? 'rgba(122,171,255,0.14)' : '#F0F5FF',
+      border: '1px solid', borderColor: 'divider',
     }}>
-      <Typography variant="body2" sx={{ fontWeight: 500, color: '#42474E' }}>{label}</Typography>
+      <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>{label}</Typography>
       <Typography sx={{
         fontFamily: '"Roboto Mono", monospace', fontWeight: 700,
-        color: '#003E9C', fontSize: '0.9rem',
+        color: 'primary.main', fontSize: '0.9rem',
       }}>
-        {value} <span style={{ fontWeight: 400, color: '#535F70', fontSize: '0.8rem' }}>{unit}</span>
+        {value} <Box component="span" sx={{ fontWeight: 400, color: 'text.secondary', fontSize: '0.8rem' }}>{unit}</Box>
       </Typography>
     </Box>
   )

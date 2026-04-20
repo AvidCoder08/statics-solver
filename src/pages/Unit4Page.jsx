@@ -44,7 +44,7 @@ function AreaMOITool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Compute area second moments of inertia for composite sections using the parallel axis theorem.
         Set the reference axes (default = x=0, y=0).
       </Typography>
@@ -63,12 +63,12 @@ function AreaMOITool() {
       {shapes.map((s, i) => {
         const def = MOI_SHAPES[s.type]
         return (
-          <Paper key={i} variant="outlined" sx={{ p: 2, mb: 2, borderRadius: 2, borderColor: s.hole ? '#FFDAD6' : '#E0E3EA', bgcolor: s.hole ? '#FFF8F7' : '#FAFCFF' }}>
+          <Paper key={i} variant="outlined" sx={{ p: 2, mb: 2, borderRadius: 2, borderColor: s.hole ? '#FFDAD6' : 'divider', bgcolor: s.hole ? (t) => t.palette.mode === 'dark' ? 'rgba(255,180,171,0.1)' : '#FFF8F7' : 'background.paper' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
               <Typography variant="subtitle2" sx={{ color: s.hole ? '#8C1D18' : '#0054C8' }}>
                 Part {i + 1}{s.hole ? ' — HOLE' : ''}
               </Typography>
-              <IconButton size="small" onClick={() => setShapes((sh) => sh.filter((_, j) => j !== i))} disabled={shapes.length <= 1} sx={{ color: '#BA1A1A' }}>
+              <IconButton size="small" onClick={() => setShapes((sh) => sh.filter((_, j) => j !== i))} disabled={shapes.length <= 1} sx={{ color: 'error.main' }}>
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </Box>
@@ -86,7 +86,7 @@ function AreaMOITool() {
               ))}
             </Box>
 
-            <Typography variant="caption" sx={{ color: '#535F70', display: 'block', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
               📍 {def.refLabel}
             </Typography>
 
@@ -94,8 +94,8 @@ function AreaMOITool() {
               <TextField label="x₀ (m)" value={s.x0} size="small" onChange={(e) => updShape(i, 'x0', e.target.value)} sx={{ width: 120 }} />
               <TextField label="y₀ (m)" value={s.y0} size="small" onChange={(e) => updShape(i, 'y0', e.target.value)} sx={{ width: 120 }} />
               <FormControlLabel
-                control={<Checkbox checked={s.hole} size="small" onChange={(e) => updShape(i, 'hole', e.target.checked)} sx={{ color: '#BA1A1A', '&.Mui-checked': { color: '#BA1A1A' } }} />}
-                label={<Typography variant="body2" sx={{ color: '#BA1A1A', fontWeight: 500 }}>Hole (subtract)</Typography>}
+                control={<Checkbox checked={s.hole} size="small" onChange={(e) => updShape(i, 'hole', e.target.checked)} sx={{ color: 'error.main', '&.Mui-checked': { color: 'error.main' } }} />}
+                label={<Typography variant="body2" sx={{ color: 'error.main', fontWeight: 500 }}>Hole (subtract)</Typography>}
               />
             </Box>
           </Paper>
@@ -118,7 +118,7 @@ function AreaMOITool() {
           <Box sx={{ overflowX: 'auto' }}>
             <Table size="small">
               <TableHead>
-                <TableRow sx={{ '& th': { bgcolor: '#F0F5FF' } }}>
+                <TableRow sx={{ '& th': { bgcolor: 'surfaceVariant' } }}>
                   <TableCell>#</TableCell>
                   <TableCell>Shape</TableCell>
                   <TableCell align="right">A (m²)</TableCell>
@@ -167,7 +167,7 @@ function FrictionHorizontalTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Block on a flat horizontal surface. Enter weight, friction coefficients, and applied horizontal force P.
       </Typography>
 
@@ -219,7 +219,7 @@ function FrictionInclinedTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Block on an inclined plane. P is the force along the slope (positive = up the slope, 0 = no external force along slope).
       </Typography>
 
@@ -275,15 +275,15 @@ export default function Unit4Page() {
     <Box>
       <Box sx={{ mb: 3 }}>
         <Typography variant="caption" sx={{ color: '#8C1D18', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Unit 4</Typography>
-        <Typography variant="h4" sx={{ color: '#1A1C1E', fontWeight: 700 }}>Area MOI & Friction</Typography>
-        <Typography variant="body2" sx={{ color: '#42474E', mt: 0.5 }}>Second moments of area · Parallel axis theorem · Dry friction</Typography>
+        <Typography variant="h4" sx={{ color: 'text.primary', fontWeight: 700 }}>Area MOI & Friction</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>Second moments of area · Parallel axis theorem · Dry friction</Typography>
       </Box>
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tab} onChange={(_, v) => setTab(v)}>
           {TOOLS.map((t) => <Tab key={t.label} label={t.label} />)}
         </Tabs>
       </Box>
-      <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid #E0E3EA', maxWidth: 820 }}>
+      <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', maxWidth: 820 }}>
         {TOOLS[tab].component}
       </Paper>
     </Box>

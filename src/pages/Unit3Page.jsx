@@ -69,7 +69,7 @@ function CentroidTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Build a composite area by adding shapes. Tick <strong>Hole</strong> to subtract that shape's area.
         x₀, y₀ is the reference corner/centre of each shape (see label below shape type).
       </Typography>
@@ -83,12 +83,12 @@ function CentroidTool() {
       {shapes.map((s, i) => {
         const def = SHAPE_DEFS[s.type]
         return (
-          <Paper key={i} variant="outlined" sx={{ p: 2, mb: 2, borderRadius: 2, borderColor: s.hole ? '#FFDAD6' : '#E0E3EA', bgcolor: s.hole ? '#FFF8F7' : '#FAFCFF' }}>
+          <Paper key={i} variant="outlined" sx={{ p: 2, mb: 2, borderRadius: 2, borderColor: s.hole ? '#FFDAD6' : 'divider', bgcolor: s.hole ? (t) => t.palette.mode === 'dark' ? 'rgba(255,180,171,0.1)' : '#FFF8F7' : 'background.paper' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
               <Typography variant="subtitle2" sx={{ color: s.hole ? '#8C1D18' : '#0054C8' }}>
                 Part {i + 1}{s.hole ? ' — HOLE' : ''}
               </Typography>
-              <IconButton size="small" onClick={() => delShape(i)} disabled={shapes.length <= 1} sx={{ color: '#BA1A1A' }}>
+              <IconButton size="small" onClick={() => delShape(i)} disabled={shapes.length <= 1} sx={{ color: 'error.main' }}>
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </Box>
@@ -106,7 +106,7 @@ function CentroidTool() {
               ))}
             </Box>
 
-            <Typography variant="caption" sx={{ color: '#535F70', display: 'block', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
               📍 {def.refLabel}
             </Typography>
 
@@ -114,8 +114,8 @@ function CentroidTool() {
               <TextField label="x₀ (m)" value={s.x0} size="small" onChange={(e) => updShape(i, 'x0', e.target.value)} sx={{ width: 120 }} />
               <TextField label="y₀ (m)" value={s.y0} size="small" onChange={(e) => updShape(i, 'y0', e.target.value)} sx={{ width: 120 }} />
               <FormControlLabel
-                control={<Checkbox checked={s.hole} size="small" onChange={(e) => updShape(i, 'hole', e.target.checked)} sx={{ color: '#BA1A1A', '&.Mui-checked': { color: '#BA1A1A' } }} />}
-                label={<Typography variant="body2" sx={{ color: '#BA1A1A', fontWeight: 500 }}>Hole (subtract)</Typography>}
+                control={<Checkbox checked={s.hole} size="small" onChange={(e) => updShape(i, 'hole', e.target.checked)} sx={{ color: 'error.main', '&.Mui-checked': { color: 'error.main' } }} />}
+                label={<Typography variant="body2" sx={{ color: 'error.main', fontWeight: 500 }}>Hole (subtract)</Typography>}
               />
             </Box>
           </Paper>
@@ -138,7 +138,7 @@ function CentroidTool() {
           <Box sx={{ overflowX: 'auto' }}>
             <Table size="small">
               <TableHead>
-                <TableRow sx={{ '& th': { bgcolor: '#F0F5FF' } }}>
+                <TableRow sx={{ '& th': { bgcolor: 'surfaceVariant' } }}>
                   <TableCell>#</TableCell>
                   <TableCell>Shape</TableCell>
                   <TableCell align="right">A (m²)</TableCell>
@@ -245,7 +245,7 @@ function BeamReactionsTool() {
 
   return (
     <Box>
-      <Typography variant="body2" sx={{ color: '#42474E', mb: 2 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
         Find support reactions for a simply supported beam (pin at A, roller at B). Typically used with Unit 3 distributed load problems.
       </Typography>
 
@@ -299,7 +299,7 @@ function BeamReactionsTool() {
             </Select>
           </FormControl>
           <TextField label="x (m)" value={s.x} size="small" onChange={(e) => updSup(i, 'x', e.target.value)} sx={{ width: 130 }} />
-          <IconButton size="small" onClick={() => setSupports((sp) => sp.filter((_, j) => j !== i))} disabled={supports.length <= 1} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setSupports((sp) => sp.filter((_, j) => j !== i))} disabled={supports.length <= 1} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setSupports((sp) => [...sp, { id: `S${sp.length + 1}`, x: '', type: 'rollerY' }])} sx={{ mb: 2 }}>Add Support</Button>
@@ -309,7 +309,7 @@ function BeamReactionsTool() {
         <Box key={i} sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center', flexWrap: 'wrap' }}>
           <TextField label="P (N)" value={p.P} size="small" onChange={(e) => updPL(i, 'P', e.target.value)} sx={{ width: 130 }} />
           <TextField label="x from A (m)" value={p.x} size="small" onChange={(e) => updPL(i, 'x', e.target.value)} sx={{ width: 140 }} />
-          <IconButton size="small" onClick={() => setPointLoads((pl) => pl.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setPointLoads((pl) => pl.filter((_, j) => j !== i))} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setPointLoads((pl) => [...pl, { P: '', x: '', angle: '270' }])} sx={{ mb: 2 }}>Add Point Load</Button>
@@ -320,7 +320,7 @@ function BeamReactionsTool() {
           <TextField label="w (N/m)" value={u.w} size="small" onChange={(e) => updUDL(i, 'w', e.target.value)} sx={{ width: 120 }} />
           <TextField label="x1 (m)" value={u.x1} size="small" onChange={(e) => updUDL(i, 'x1', e.target.value)} sx={{ width: 110 }} />
           <TextField label="x2 (m)" value={u.x2} size="small" onChange={(e) => updUDL(i, 'x2', e.target.value)} sx={{ width: 110 }} />
-          <IconButton size="small" onClick={() => setUdls((ud) => ud.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setUdls((ud) => ud.filter((_, j) => j !== i))} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setUdls((u) => [...u, { w: '', x1: '', x2: '' }])} sx={{ mb: 2 }}>Add UDL</Button>
@@ -332,7 +332,7 @@ function BeamReactionsTool() {
           <TextField label="w2 (N/m)" value={u.w2} size="small" onChange={(e) => updUVL(i, 'w2', e.target.value)} sx={{ width: 120 }} />
           <TextField label="x1 (m)" value={u.x1} size="small" onChange={(e) => updUVL(i, 'x1', e.target.value)} sx={{ width: 110 }} />
           <TextField label="x2 (m)" value={u.x2} size="small" onChange={(e) => updUVL(i, 'x2', e.target.value)} sx={{ width: 110 }} />
-          <IconButton size="small" onClick={() => setUvls((ul) => ul.filter((_, j) => j !== i))} sx={{ color: '#BA1A1A' }}><DeleteIcon fontSize="small" /></IconButton>
+          <IconButton size="small" onClick={() => setUvls((ul) => ul.filter((_, j) => j !== i))} sx={{ color: 'error.main' }}><DeleteIcon fontSize="small" /></IconButton>
         </Box>
       ))}
       <Button size="small" startIcon={<AddIcon />} onClick={() => setUvls((u) => [...u, { w1: '', w2: '', x1: '', x2: '' }])} sx={{ mb: 2 }}>Add UVL</Button>
@@ -387,15 +387,15 @@ export default function Unit3Page() {
     <Box>
       <Box sx={{ mb: 3 }}>
         <Typography variant="caption" sx={{ color: '#7D3B00', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Unit 3</Typography>
-        <Typography variant="h4" sx={{ color: '#1A1C1E', fontWeight: 700 }}>Distributed Forces</Typography>
-        <Typography variant="body2" sx={{ color: '#42474E', mt: 0.5 }}>Centroids · Composite areas · Beam reactions</Typography>
+        <Typography variant="h4" sx={{ color: 'text.primary', fontWeight: 700 }}>Distributed Forces</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>Centroids · Composite areas · Beam reactions</Typography>
       </Box>
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tab} onChange={(_, v) => setTab(v)}>
           {TOOLS.map((t) => <Tab key={t.label} label={t.label} />)}
         </Tabs>
       </Box>
-      <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid #E0E3EA', maxWidth: 820 }}>
+      <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', maxWidth: 820 }}>
         {TOOLS[tab].component}
       </Paper>
     </Box>

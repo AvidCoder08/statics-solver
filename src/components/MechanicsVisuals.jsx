@@ -11,10 +11,19 @@ const palette = ['#0054C8', '#8C1D18', '#006E2C', '#7D3B00', '#6A1B9A', '#1565C0
 
 function Panel({ title, subtitle, children }) {
   return (
-    <Paper variant="outlined" sx={{ p: 2, mb: 2.5, borderRadius: 2.5, bgcolor: '#F9FBFF', borderColor: '#D7E3FF' }}>
-      <Typography variant="subtitle2" sx={{ color: '#003E9C', fontWeight: 700 }}>{title}</Typography>
+    <Paper
+      variant="outlined"
+      sx={{
+        p: 2,
+        mb: 2.5,
+        borderRadius: 2.5,
+        bgcolor: (t) => t.palette.mode === 'dark' ? 'rgba(122,171,255,0.08)' : '#F9FBFF',
+        borderColor: 'divider',
+      }}
+    >
+      <Typography variant="subtitle2" sx={{ color: 'primary.main', fontWeight: 700 }}>{title}</Typography>
       {subtitle && (
-        <Typography variant="caption" sx={{ color: '#535F70', display: 'block', mb: 1.25 }}>
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1.25 }}>
           {subtitle}
         </Typography>
       )}

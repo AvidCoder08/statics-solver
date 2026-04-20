@@ -6,11 +6,20 @@ import Unit2Page from './pages/Unit2Page.jsx'
 import Unit3Page from './pages/Unit3Page.jsx'
 import Unit4Page from './pages/Unit4Page.jsx'
 
-export default function App() {
+export default function App({ themeMode, themePreference, onThemePreferenceChange }) {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route
+          path="/"
+          element={
+            <Layout
+              themeMode={themeMode}
+              themePreference={themePreference}
+              onThemePreferenceChange={onThemePreferenceChange}
+            />
+          }
+        >
           <Route index element={<Home />} />
           <Route path="unit1" element={<Unit1Page />} />
           <Route path="unit2" element={<Unit2Page />} />
