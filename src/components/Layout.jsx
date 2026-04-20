@@ -53,10 +53,10 @@ export default function Layout() {
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#F0F3FB' }}>
       <Box sx={{ px: 2.5, py: 3 }}>
         <Typography variant="h6" sx={{ color: '#0054C8', fontWeight: 700, letterSpacing: '-0.01em' }}>
-          Statics Solver
+          Help Me Newton!
         </Typography>
         <Typography variant="caption" sx={{ color: '#42474E', display: 'block', mt: 0.25 }}>
-          Engineering Mechanics · PES University
+          Engineering Mechanics
         </Typography>
       </Box>
       <Divider sx={{ mx: 2 }} />
@@ -125,7 +125,7 @@ export default function Layout() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" sx={{ fontWeight: 700, color: '#0054C8' }}>
-              Statics Solver
+              Help Me Newton!
             </Typography>
           </Toolbar>
         </AppBar>

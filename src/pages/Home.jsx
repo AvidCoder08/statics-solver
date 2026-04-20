@@ -1,9 +1,12 @@
 import { useNavigate } from 'react-router-dom'
-import { Box, Typography, Grid, Card, CardActionArea, CardContent, Chip } from '@mui/material'
+import { Box, Typography, Grid, Card, CardActionArea, CardContent, Chip, Stack, Link } from '@mui/material'
 import BoltIcon from '@mui/icons-material/Bolt'
 import BalanceIcon from '@mui/icons-material/Balance'
 import CenterFocusStrongIcon from '@mui/icons-material/CenterFocusStrong'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
+import InstagramIcon from '@mui/icons-material/Instagram'
+import GitHubIcon from '@mui/icons-material/GitHub'
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
 
 const UNITS = [
   {
@@ -95,6 +98,42 @@ export default function Home() {
           Pick a unit → select a tool → enter your values → click <strong>Calculate</strong>.
           Each solution is broken down step-by-step so you can check every line of your manual work.
         </Typography>
+      </Box>
+
+      <Box sx={{ mt: 2, p: 2.5, bgcolor: '#FFF7EA', borderRadius: 3, border: '1px solid #F0D8AE' }}>
+        <Typography variant="subtitle2" sx={{ color: '#7D3B00', mb: 0.5 }}>About</Typography>
+        <Typography variant="body2" sx={{ color: '#4A3B2A', lineHeight: 1.7 }}>
+          Made with {'💙'} by Shashank Munnangi (notacoder08)
+        </Typography>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 1.5 }}>
+          <Link
+            href="https://instagram.com/notacoder08"
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: '#7D3B00', fontWeight: 600 }}
+          >
+            <InstagramIcon fontSize="small" /> Instagram
+          </Link>
+          <Link
+            href="https://github.com/notacoder08"
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: '#7D3B00', fontWeight: 600 }}
+          >
+            <GitHubIcon fontSize="small" /> GitHub
+          </Link>
+          <Link
+            href="https://www.linkedin.com/in/shashank-munnangi"
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, color: '#7D3B00', fontWeight: 600 }}
+          >
+            <LinkedInIcon fontSize="small" /> LinkedIn
+          </Link>
+        </Stack>
       </Box>
     </Box>
   )
